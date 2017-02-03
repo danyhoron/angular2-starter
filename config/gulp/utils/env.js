@@ -7,8 +7,10 @@ var ENVS = {
 };
 
 var ENV = argv.env || process.env.NODE_ENV || ENVS.DEV;
+var VARS = argv;
 
 module.exports = {
     ENV: ENV,
-    ENVS: ENVS
+    ENVS: ENVS,
+    VARS: VARS
 };

@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var util = require('gulp-util');
 var config = require('../config')();
+var envConfig = require('../utils/env');
 var Server = require('karma').Server;
 var gulpProtractor = require('gulp-protractor');
 var remapIstanbul = require('remap-istanbul/lib/gulpRemapIstanbul');
@@ -39,13 +40,14 @@ gulp.task('unit-test', ['tsc'], function (done) {
 gulp.task('e2e', ['e2e-test']);
 gulp.task('driver-update', gulpProtractor['webdriver_update']);
 gulp.task('e2e-test', ['driver-update'], function () {
+    var baseUrl = envConfig.VARS.e2eurl || process.env.e2eurl || config.e2eConfig.seleniumTarget;
     gulp.src(config.e2e + '**/*.spec.ts')
     .pipe(gulpProtractor.protractor({
         configFile: 'config/test/protractor.conf.js',
-        args: ['--baseUrl', config.e2eConfig.seleniumTarget]
+        args: ['--baseUrl', baseUrl]
     }))
     .on('error', function(e) {
-        util.log('Error running E2E testing');
+        util.log('Error running E2E testing', e);
         process.exit(1);
     });
 });

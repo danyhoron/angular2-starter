@@ -1,10 +1,12 @@
 var gulp = require('gulp');
+var gulpif = require('gulp-if');
 var util = require('gulp-util');
 var config = require('../config')();
 var ts = require('gulp-typescript');
 var tslint = require('gulp-tslint');
 var sourcemaps = require('gulp-sourcemaps');
 var argv = require('yargs').argv;
+var embedTemplates = require('gulp-angular-embed-templates');
 
 /* Initialize TS Project */
 var typingFiles = [
@@ -27,6 +29,10 @@ gulp.task('tsc', ['clean-ts', 'env'], function () {
 });
 
 gulp.task('tsc-app', ['env'], function () {
+    return compileTs(config.tsFiles, false, true);
+});
+
+gulp.task('tsc-dev', ['env'], function () {
     return compileTs(config.tsFiles);
 });
 
@@ -55,9 +61,10 @@ function lintTs(files) {
         .pipe(tslint.report());
 }
 
-function compileTs(files, watchMode) {
+function compileTs(files, watchMode, embed) {
     var inline = !argv.excludeSource;
     watchMode = watchMode || false;
+    embed = embed || false;
 
     var tsProject = ts.createProject('tsconfig.json');
     var allFiles = [].concat(files, typingFiles);
@@ -69,6 +76,7 @@ function compileTs(files, watchMode) {
             formatter: 'verbose'
         }))
         .pipe(tslint.report())
+        .pipe(gulpif(embed, embedTemplates({sourceType:'ts'})))
         .pipe(sourcemaps.init())
         .pipe(tsProject())
         .on('error', function () {

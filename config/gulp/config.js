@@ -80,42 +80,38 @@ module.exports = function () {
         tsTestFiles: tsTestFiles,
         systemJs: systemJs
     };
-
-    if (envConfig.ENV === envConfig.ENVS.DEV)
-    {
-        var historyApiFallback = require('connect-history-api-fallback');
-        var browserSync = {
-            dev: {
-                port: 3000,
-                injectChanges: false,
-                server: {
-                    baseDir: './src/',
-                    middleware: [historyApiFallback()],
-                    routes: {
-                        "/node_modules": "node_modules",
-                        "/src": "src"
-                    }
-                },
-                files: [
-                    src + "index.html",
-                    src + "systemjs.conf.js",
-                    assetsPath.styles + "main.css",
-                    tmpApp + "**/*.js",
-                    app + "**/*.css",
-                    app + "**/*.html"
-                ]
-            },
-            prod: {
-                port: 3001,
-                server: {
-                    baseDir: './' + build.path,
-                    middleware: [historyApiFallback()]
+    var historyApiFallback = require('connect-history-api-fallback');
+    var browserSync = {
+        dev: {
+            port: 3000,
+            injectChanges: false,
+            server: {
+                baseDir: './src/',
+                middleware: [historyApiFallback()],
+                routes: {
+                    "/node_modules": "node_modules",
+                    "/src": "src"
                 }
+            },
+            files: [
+                src + "index.html",
+                src + "systemjs.conf.js",
+                assetsPath.styles + "main.css",
+                tmpApp + "**/*.js",
+                app + "**/*.css",
+                app + "**/*.html"
+            ]
+        },
+        prod: {
+            port: 3001,
+            server: {
+                baseDir: './' + build.path,
+                middleware: [historyApiFallback()]
             }
-        };
+        }
+    };
 
-        gulpConfig.browserSync = browserSync;
-    }
+    gulpConfig.browserSync = browserSync;
 
     return gulpConfig;
 };

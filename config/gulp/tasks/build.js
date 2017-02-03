@@ -22,9 +22,9 @@ gulp.task('build', function (done) {
 /* Concat and minify/uglify all css, js, and copy fonts */
 gulp.task('build-assets', function (done) {
     runSequence('clean-build', ['sass', 'fonts'], function () {
-        gulp.src(config.app + '**/*.html')
-        .pipe(flatten())
-        .pipe(gulp.dest(config.build.path));
+        // gulp.src(config.app + '**/*.html')
+        // .pipe(flatten())
+        // .pipe(gulp.dest(config.build.path));
 
         gulp.src(config.app + '**/*.css')
         .pipe(cssnano({zindex: false}))
